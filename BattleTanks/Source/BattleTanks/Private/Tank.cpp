@@ -8,6 +8,8 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Aiming component is a requirement, that is way we instantiate it at creation time
+	AimingComponent = CreateDefaultSubobject<UAimingComponent>(FName("Aiming Component"));
 }
 
 // Called when the game starts or when spawned
@@ -30,4 +32,9 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
+
+void ATank::AimAt(FVector HitLocation) {
+	AimingComponent->Aim(HitLocation);
+}
+
 
