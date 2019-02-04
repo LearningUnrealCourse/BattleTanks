@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "AimingComponent.generated.h"
 
+//Forward Declaration
+class UBarrel; 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANKS_API UAimingComponent : public UActorComponent
@@ -13,17 +15,24 @@ class BATTLETANKS_API UAimingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UAimingComponent();
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void Aim(FVector HitLocation, float LaunchSpeed);
+
+	void SetBarrel(UBarrel* Barrel);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+private:
 
-	void Aim(FVector HitLocation);
+	UBarrel* Barrel = nullptr;
+
+	// Sets default values for this component's properties
+	UAimingComponent();
+
+	void MoveBarrelTowards(FVector direction);
 		
 };

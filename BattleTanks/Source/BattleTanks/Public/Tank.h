@@ -7,28 +7,37 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
+class UBarrel; //Forward Declaration
+
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
-	ATank();
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	void AimAt(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetBarrelReference(UBarrel* Barrel);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UAimingComponent* AimingComponent = nullptr;
+
+private:
+
+	// Sets default values for this pawn's properties
+	ATank();
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UAimingComponent* AimingComponent = nullptr;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	void AimAt(FVector HitLocation);
+	UPROPERTY(EditAnywhere, Category = Firing)
+	float LaunchSpeed = 100000; // TODO find sensible default
 
 };

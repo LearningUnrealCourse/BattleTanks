@@ -2,6 +2,11 @@
 
 #include "AimingComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "Components/StaticMeshComponent.h"
+#include "Barrel.h"
+
+
 // Sets default values for this component's properties
 UAimingComponent::UAimingComponent()
 {
@@ -22,6 +27,11 @@ void UAimingComponent::BeginPlay()
 	
 }
 
+void UAimingComponent::SetBarrel(UBarrel * Barrel)
+{
+	this->Barrel = Barrel;
+}
+
 
 // Called every frame
 void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -31,8 +41,41 @@ void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-void UAimingComponent::Aim(FVector HitLocation)
+void UAimingComponent::Aim(FVector HitLocation, float LaunchSpeed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Aiming at: %s"), *HitLocation.ToString());
+	if (!Barrel)
+	{
+		return;
+	}
+
+	FVector OutLaunchVelocity;
+	// We are going to use a socket already placed in the end of the barrel
+	FVector StartProjectileLocation = Barrel->GetSocketLocation(FName("Projectile"));
+
+	bool velocity = UGameplayStatics::SuggestProjectileVelocity(
+		this,
+		OutLaunchVelocity,
+		StartProjectileLocation,
+		HitLocation,
+		LaunchSpeed,
+		false,
+		0.f,
+		0.f,
+		ESuggestProjVelocityTraceOption::DoNotTrace);
+
+	if (velocity)
+	{
+		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		MoveBarrelTowards(AimDirection);
+	}
+}
+
+void UAimingComponent::MoveBarrelTowards(FVector direction)
+{
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator = direction.Rotation();
+	auto DeltaRortator = AimAsRotator - BarrelRotator;
+
+	Barrel->Elevate(5);
 }
 
