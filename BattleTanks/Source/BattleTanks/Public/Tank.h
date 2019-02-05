@@ -8,6 +8,7 @@
 #include "Tank.generated.h"
 
 class UBarrel; //Forward Declaration
+class UTurret; //Forward Declaration
 
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
@@ -22,6 +23,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void SetBarrelReference(UBarrel* Barrel);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetTurretReference(UTurret* Turret);
+
 
 protected:
 	// Called when the game starts or when spawned

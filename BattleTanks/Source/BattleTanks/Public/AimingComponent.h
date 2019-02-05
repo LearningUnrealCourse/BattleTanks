@@ -8,6 +8,7 @@
 
 //Forward Declaration
 class UBarrel; 
+class UTurret;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANKS_API UAimingComponent : public UActorComponent
@@ -20,7 +21,9 @@ public:
 
 	void Aim(FVector HitLocation, float LaunchSpeed);
 
+
 	void SetBarrel(UBarrel* Barrel);
+	void SetTurret(UTurret* Barrel);
 
 protected:
 	// Called when the game starts
@@ -29,10 +32,13 @@ protected:
 private:
 
 	UBarrel* Barrel = nullptr;
+	UTurret* Turret = nullptr;
 
 	// Sets default values for this component's properties
 	UAimingComponent();
 
+	FRotator GetDeltaRotator(FRotator Rotator, FVector Direction);
 	void MoveBarrelTowards(FVector direction);
+	void MoveTurretTowards(FVector direction);
 		
 };

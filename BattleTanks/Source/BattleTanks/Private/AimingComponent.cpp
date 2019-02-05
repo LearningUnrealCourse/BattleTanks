@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 #include "Barrel.h"
+#include "Turret.h"
 
 
 // Sets default values for this component's properties
@@ -30,6 +31,11 @@ void UAimingComponent::BeginPlay()
 void UAimingComponent::SetBarrel(UBarrel * Barrel)
 {
 	this->Barrel = Barrel;
+}
+
+void UAimingComponent::SetTurret(UTurret * Turret)
+{
+	this->Turret = Turret;
 }
 
 
@@ -67,15 +73,26 @@ void UAimingComponent::Aim(FVector HitLocation, float LaunchSpeed)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
+		MoveTurretTowards(AimDirection);
 	}
 }
 
-void UAimingComponent::MoveBarrelTowards(FVector direction)
-{
-	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-	auto AimAsRotator = direction.Rotation();
-	auto DeltaRortator = AimAsRotator - BarrelRotator;
+FRotator UAimingComponent::GetDeltaRotator(FRotator Rotator, FVector Direction) {
+	FRotator AimAsRotator = Direction.Rotation();
+	return AimAsRotator - Rotator;
+}
 
-	Barrel->Elevate(5);
+void UAimingComponent::MoveBarrelTowards(FVector Direction)
+{
+	auto Rotator = Barrel->GetForwardVector().Rotation();
+	auto DeltaRotator = GetDeltaRotator(Rotator, Direction);
+	Barrel->Elevate(DeltaRotator.Pitch);
+}
+
+void UAimingComponent::MoveTurretTowards(FVector Direction)
+{
+	auto Rotator = Turret->GetForwardVector().Rotation();
+	auto DeltaRotator = GetDeltaRotator(Rotator, Direction);
+	Turret->Rotate(DeltaRotator.Yaw);
 }
 
