@@ -9,7 +9,6 @@ void UBarrel::Elevate(float RelativeSpeed)
 	float ElevationChange = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
 	float RawNewElevation = RelativeRotation.Pitch + ElevationChange;
 	float Elevation = FMath::Clamp(RawNewElevation, MinElevationDegrees, MaxElevationDegrees);
-	UE_LOG(LogTemp, Warning, TEXT("Elevate: %f"), Elevation);
 
 	SetRelativeRotation(FRotator(Elevation, 0, 0));
 }

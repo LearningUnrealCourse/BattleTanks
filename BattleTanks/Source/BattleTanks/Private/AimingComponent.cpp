@@ -13,7 +13,7 @@ UAimingComponent::UAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -58,7 +58,7 @@ void UAimingComponent::Aim(FVector HitLocation, float LaunchSpeed)
 	// We are going to use a socket already placed in the end of the barrel
 	FVector StartProjectileLocation = Barrel->GetSocketLocation(FName("Projectile"));
 
-	bool velocity = UGameplayStatics::SuggestProjectileVelocity(
+	bool solution = UGameplayStatics::SuggestProjectileVelocity(
 		this,
 		OutLaunchVelocity,
 		StartProjectileLocation,
@@ -69,7 +69,7 @@ void UAimingComponent::Aim(FVector HitLocation, float LaunchSpeed)
 		0.f,
 		ESuggestProjVelocityTraceOption::DoNotTrace);
 
-	if (velocity)
+	if (solution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);

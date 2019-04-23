@@ -32,7 +32,11 @@ void ATank::Tick(float DeltaTime)
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ATank::Fire);
+}
 
+void ATank::Fire() {
+	UE_LOG(LogTemp, Warning, TEXT("Firing to aimed position"))
 }
 
 void ATank::AimAt(FVector HitLocation) {
