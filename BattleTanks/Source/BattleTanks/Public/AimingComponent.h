@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "AimingComponent.generated.h"
 
-//Forward Declaration
 class UBarrel; 
 class UTurret;
 

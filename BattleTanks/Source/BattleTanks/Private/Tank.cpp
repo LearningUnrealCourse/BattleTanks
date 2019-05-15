@@ -4,15 +4,18 @@
 #include "Turret.h"
 #include "Barrel.h"
 #include "Projectile.h"
+#include "TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Aiming component is a requirement, that is way we instantiate it at creation time
 	AimingComponent = CreateDefaultSubobject<UAimingComponent>(FName("Aiming Component"));
+
+	MovementComponent = Cast<UTankMovementComponent>(GetComponentByClass(UTankMovementComponent::StaticClass()));
 }
 
 // Called when the game starts or when spawned

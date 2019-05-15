@@ -7,9 +7,10 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
-class UBarrel; //Forward Declaration
-class UTurret; //Forward Declaration
+class UBarrel; 
+class UTurret; 
 class AProjectile;
+class UTankMovementComponent;
 
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
@@ -37,6 +38,7 @@ protected:
 
 	UAimingComponent* AimingComponent = nullptr;
 
+	UTankMovementComponent* MovementComponent = nullptr;
 private:
 
 	// Sets default values for this pawn's properties
