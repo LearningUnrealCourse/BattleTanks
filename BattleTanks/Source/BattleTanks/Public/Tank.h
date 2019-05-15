@@ -9,6 +9,7 @@
 
 class UBarrel; //Forward Declaration
 class UTurret; //Forward Declaration
+class AProjectile;
 
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
@@ -45,6 +46,15 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, Category = Firing)
-	float LaunchSpeed = 100000; // TODO find sensible default
+	float LaunchSpeed = 4000.f; 
 
+	UPROPERTY(EditAnywhere, Category = Firing)
+	float FireRateSeconds = 2.f;
+
+	UPROPERTY(EditAnywhere, Category = SetUp)
+	TSubclassOf<AProjectile> Projectile;
+
+	UBarrel* m_pBarrel;
+
+	double m_dLastFireTimeSeconds = 0;
 };
