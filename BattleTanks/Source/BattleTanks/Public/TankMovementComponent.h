@@ -29,6 +29,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Input)
 	void IntendTurnRight(float Throw);
 
+	/** path following: request new velocity */
+	virtual void RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed) override;
+
 private:
 
 	void SetTrackThrottle(UTrack* Track, float Throw);

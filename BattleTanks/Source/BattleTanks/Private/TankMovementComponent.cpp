@@ -5,6 +5,8 @@
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
+	if (Throw != 0.f) UE_LOG(LogTemp, Warning, TEXT("Throw: %f"), Throw)
+
 	SetTrackThrottle(m_pRightTrack, Throw);
 	SetTrackThrottle(m_pLeftTrack, Throw);
 }
@@ -37,4 +39,17 @@ void UTankMovementComponent::SetLeftTrack(UTrack* Track)
 	{
 		m_pLeftTrack = Track;
 	}
+}
+
+void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *MoveVelocity.ToString())
+	
+	FVector currentForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	FVector forwardIntention = MoveVelocity.GetSafeNormal(); //Unit direction
+	float dotProduct = FVector::DotProduct(currentForward, forwardIntention);
+	//FVector crossProduct = FVector::CrossProduct(currentForward, forwardIntention);
+	UE_LOG(LogTemp, Warning, TEXT("RequestDirectMove %f"), dotProduct)
+	IntendMoveForward(dotProduct);
+	//IntendTurnRight(crossProduct);
 }

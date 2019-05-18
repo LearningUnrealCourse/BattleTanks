@@ -18,6 +18,9 @@ class BATTLETANKS_API ATankAIController : public AAIController
 	
 public:
 
+	UPROPERTY(EditAnywhere, Category = "Path Finding")
+	float AcceptanceRadius = 3000.f;
+
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
