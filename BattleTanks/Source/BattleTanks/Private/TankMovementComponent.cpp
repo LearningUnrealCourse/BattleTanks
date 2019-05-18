@@ -43,13 +43,10 @@ void UTankMovementComponent::SetLeftTrack(UTrack* Track)
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Velocity: %s"), *MoveVelocity.ToString())
-	
 	FVector currentForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
 	FVector forwardIntention = MoveVelocity.GetSafeNormal(); //Unit direction
 	float dotProduct = FVector::DotProduct(currentForward, forwardIntention);
-	//FVector crossProduct = FVector::CrossProduct(currentForward, forwardIntention);
-	UE_LOG(LogTemp, Warning, TEXT("RequestDirectMove %f"), dotProduct)
+	FVector crossProduct = FVector::CrossProduct(currentForward, forwardIntention);
 	IntendMoveForward(dotProduct);
-	//IntendTurnRight(crossProduct);
+	IntendTurnRight(crossProduct.Z);
 }
