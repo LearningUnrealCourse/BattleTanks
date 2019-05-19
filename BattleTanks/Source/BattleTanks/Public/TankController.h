@@ -15,6 +15,7 @@ class BATTLETANKS_API ATankController : public AController
 {
 	GENERATED_BODY()
 
-public:
+protected:
+
 	ATank* GetControlledTank() const;
 };

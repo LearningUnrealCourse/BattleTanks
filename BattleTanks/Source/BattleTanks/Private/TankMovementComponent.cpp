@@ -25,19 +25,16 @@ void UTankMovementComponent::SetTrackThrottle(UTrack* Track, float Throw)
 	}
 }
 
-void UTankMovementComponent::SetRightTrack(UTrack* Track)
+void UTankMovementComponent::Initialise(UTrack* RightTrack, UTrack* LeftTrack)
 {
-	if (Track != nullptr)
+	if (RightTrack != nullptr)
 	{
-		m_pRightTrack = Track;
+		m_pRightTrack = RightTrack;
 	}
-}
 
-void UTankMovementComponent::SetLeftTrack(UTrack* Track)
-{
-	if (Track != nullptr)
+	if (LeftTrack != nullptr)
 	{
-		m_pLeftTrack = Track;
+		m_pLeftTrack = LeftTrack;
 	}
 }
 

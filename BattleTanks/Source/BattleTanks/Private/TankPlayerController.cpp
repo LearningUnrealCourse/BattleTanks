@@ -7,25 +7,22 @@
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
 #include "DrawDebugHelpers.h"
+#include "Tank.h"
 
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto ControlledTank = GetControlledTank();
-	if (!ControlledTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Controller not possesing a tank"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Controller possessing: %s"), *(ControlledTank->GetName()));
-	}
-
 	//Getting Pixel Coords at start since the value is not going to change 
 	//*Have in mind if the screen is scalated this is not going to work
 	CrosshHairScreenLocationPixelCoords = GetCrossHairScreenLocationInPixelCoordinates();
+}
+
+
+ATank* ATankPlayerController::GetControlledTank() const
+{
+	return Cast<ATank>(GetPawn());
 }
 
 //Find crosshair screen location (using viewport) in pixel coordinates
@@ -48,16 +45,10 @@ void ATankPlayerController::Tick(float DeltaTime)
 	AimAtCrosshair();
 }
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
-
-
 void ATankPlayerController::AimAtCrosshair()
 {
 	auto Tank = GetControlledTank();
-	if (!Tank)
+	if (Tank == nullptr)
 	{
 		return;
 	}

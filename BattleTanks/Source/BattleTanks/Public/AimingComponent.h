@@ -6,10 +6,19 @@
 #include "Components/ActorComponent.h"
 #include "AimingComponent.generated.h"
 
+//Aiming States
+UENUM()
+enum class EAimingState : uint8
+{
+	Locked,
+	Aiming,
+	Reloading
+};
+
 class UBarrel; 
 class UTurret;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(meta = (BlueprintSpawnableComponent))
 class BATTLETANKS_API UAimingComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -17,21 +26,20 @@ class BATTLETANKS_API UAimingComponent : public UActorComponent
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	
 	void Aim(FVector HitLocation, float LaunchSpeed);
 
-
-	void SetBarrel(UBarrel* Barrel);
-	void SetTurret(UTurret* Barrel);
+	UFUNCTION(BlueprintCallable, Category = "SetUp")
+	void Initialise(UBarrel* Barrel, UTurret* Turret);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-private:
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	EAimingState m_eCurrentState;
 
-	UBarrel* Barrel = nullptr;
-	UTurret* Turret = nullptr;
+private:
 
 	// Sets default values for this component's properties
 	UAimingComponent();
@@ -39,5 +47,10 @@ private:
 	FRotator GetDeltaRotator(FRotator Rotator, FVector Direction);
 	void MoveBarrelTowards(FVector direction);
 	void MoveTurretTowards(FVector direction);
-		
+
+private:
+
+	UBarrel* Barrel = nullptr;
+	UTurret* Turret = nullptr;
+	
 };

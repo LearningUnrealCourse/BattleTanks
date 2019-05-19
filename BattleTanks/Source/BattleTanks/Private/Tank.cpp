@@ -5,6 +5,7 @@
 #include "Barrel.h"
 #include "Projectile.h"
 #include "TankMovementComponent.h"
+#include "AimingComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -12,10 +13,10 @@ ATank::ATank()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Aiming component is a requirement, that is way we instantiate it at creation time
-	AimingComponent = CreateDefaultSubobject<UAimingComponent>(FName("Aiming Component"));
-
 	MovementComponent = Cast<UTankMovementComponent>(GetComponentByClass(UTankMovementComponent::StaticClass()));
+
+	AimingComponent = Cast<UAimingComponent>(GetComponentByClass(UAimingComponent::StaticClass()));
+
 }
 
 // Called when the game starts or when spawned
@@ -42,10 +43,8 @@ void ATank::Fire()
 	double currentTimeInSeconds = FPlatformTime::Seconds();
 	if (m_pBarrel != nullptr && ((currentTimeInSeconds - m_dLastFireTimeSeconds) > FireRateSeconds))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Firing to aimed position"));
 		FVector socketLocation = m_pBarrel->GetSocketLocation(FName("Projectile"));
 		FRotator socketRotation = m_pBarrel->GetSocketRotation(FName("Projectile"));
-		UE_LOG(LogTemp, Warning, TEXT("Socket Location: %s"), *socketLocation.ToString());
 		AProjectile* spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(
 			Projectile, 
 			socketLocation, 
@@ -57,18 +56,19 @@ void ATank::Fire()
 }
 
 void ATank::AimAt(FVector HitLocation) {
-	AimingComponent->Aim(HitLocation, LaunchSpeed);
+	if (AimingComponent != nullptr)
+	{
+		AimingComponent->Aim(HitLocation, LaunchSpeed);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AimingComponent is missing!!!"))
+	}
 }
 
 void ATank::SetBarrelReference(UBarrel * Barrel)
 {
-	AimingComponent->SetBarrel(Barrel);
 	m_pBarrel = Barrel;
-}
-
-void ATank::SetTurretReference(UTurret * Turret)
-{
-	AimingComponent->SetTurret(Turret);
 }
 
 

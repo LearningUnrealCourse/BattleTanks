@@ -24,20 +24,16 @@ void UAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	m_eCurrentState = EAimingState::Reloading;
 	// ...
 	
 }
 
-void UAimingComponent::SetBarrel(UBarrel * Barrel)
+void UAimingComponent::Initialise(UBarrel* Barrel, UTurret* Turret)
 {
 	this->Barrel = Barrel;
-}
-
-void UAimingComponent::SetTurret(UTurret * Turret)
-{
 	this->Turret = Turret;
 }
-
 
 // Called every frame
 void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -49,7 +45,7 @@ void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UAimingComponent::Aim(FVector HitLocation, float LaunchSpeed)
 {
-	if (!Barrel)
+	if (Barrel == nullptr)
 	{
 		return;
 	}
@@ -72,8 +68,11 @@ void UAimingComponent::Aim(FVector HitLocation, float LaunchSpeed)
 	if (solution)
 	{
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
-		MoveBarrelTowards(AimDirection);
-		MoveTurretTowards(AimDirection);
+		if (Barrel != nullptr && Turret != nullptr)
+		{
+			MoveBarrelTowards(AimDirection);
+			MoveTurretTowards(AimDirection);
+		}
 	}
 }
 

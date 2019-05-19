@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "AimingComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
@@ -11,6 +10,7 @@ class UBarrel;
 class UTurret; 
 class AProjectile;
 class UTankMovementComponent;
+class UAimingComponent;
 
 UCLASS()
 class BATTLETANKS_API ATank : public APawn
@@ -25,17 +25,14 @@ public:
 
 	void AimAt(FVector HitLocation);
 
-	UFUNCTION(BlueprintCallable, Category = Setup)
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetBarrelReference(UBarrel* Barrel);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTurret* Turret);
-
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(BlueprintReadOnly)
 	UAimingComponent* AimingComponent = nullptr;
 
 	UTankMovementComponent* MovementComponent = nullptr;
@@ -47,16 +44,16 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditAnywhere, Category = "Firing")
 	float LaunchSpeed = 4000.f; 
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditAnywhere, Category = "Firing")
 	float FireRateSeconds = 2.f;
 
-	UPROPERTY(EditAnywhere, Category = SetUp)
+	UPROPERTY(EditAnywhere, Category = "SetUp")
 	TSubclassOf<AProjectile> Projectile;
 
-	UBarrel* m_pBarrel;
+	UBarrel* m_pBarrel; //TODO Remove
 
 	double m_dLastFireTimeSeconds = 0;
 };

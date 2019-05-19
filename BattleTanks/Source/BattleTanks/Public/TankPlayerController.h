@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
+class ATank;
 /**
  * 
  */
@@ -21,6 +22,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	ATank* GetControlledTank() const;
+
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -34,7 +38,6 @@ private:
 
 	FVector2D CrosshHairScreenLocationPixelCoords;
 
-	ATank* GetControlledTank() const;
 	void AimAtCrosshair();
 	bool GetSightRayHitLocation(FVector & OutHitLocation);
 	bool GetCrossHairHitLocation(FVector CrossHairDirection, FVector & OutHitLocation);
