@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Barrel.h"
 #include "Turret.h"
+#include "Projectile.h"
 
 
 // Sets default values for this component's properties
@@ -43,9 +44,9 @@ void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-void UAimingComponent::Aim(FVector HitLocation, float LaunchSpeed)
+void UAimingComponent::Aim(FVector HitLocation)
 {
-	if (Barrel == nullptr)
+	if (!ensure(Barrel))
 	{
 		return;
 	}
@@ -95,3 +96,19 @@ void UAimingComponent::MoveTurretTowards(FVector Direction)
 	Turret->Rotate(DeltaRotator.Yaw);
 }
 
+void UAimingComponent::Fire()
+{
+	double currentTimeInSeconds = FPlatformTime::Seconds();
+	if (Barrel != nullptr && ((currentTimeInSeconds - m_dLastFireTimeSeconds) > FireRateSeconds))
+	{
+		FVector socketLocation = Barrel->GetSocketLocation(FName("Projectile"));
+		FRotator socketRotation = Barrel->GetSocketRotation(FName("Projectile"));
+		AProjectile* spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(
+			Projectile,
+			socketLocation,
+			socketRotation
+			);
+		spawnedProjectile->Launch(LaunchSpeed);
+		m_dLastFireTimeSeconds = FPlatformTime::Seconds();
+	}
+}

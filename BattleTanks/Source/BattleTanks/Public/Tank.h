@@ -6,10 +6,6 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
-class UBarrel; 
-class UTurret; 
-class AProjectile;
-class UTankMovementComponent;
 class UAimingComponent;
 
 UCLASS()
@@ -25,9 +21,6 @@ public:
 
 	void AimAt(FVector HitLocation);
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetBarrelReference(UBarrel* Barrel);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,7 +28,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	UAimingComponent* AimingComponent = nullptr;
 
-	UTankMovementComponent* MovementComponent = nullptr;
 private:
 
 	// Sets default values for this pawn's properties
@@ -43,17 +35,4 @@ private:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UPROPERTY(EditAnywhere, Category = "Firing")
-	float LaunchSpeed = 4000.f; 
-
-	UPROPERTY(EditAnywhere, Category = "Firing")
-	float FireRateSeconds = 2.f;
-
-	UPROPERTY(EditAnywhere, Category = "SetUp")
-	TSubclassOf<AProjectile> Projectile;
-
-	UBarrel* m_pBarrel; //TODO Remove
-
-	double m_dLastFireTimeSeconds = 0;
 };

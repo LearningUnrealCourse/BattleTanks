@@ -17,6 +17,7 @@ enum class EAimingState : uint8
 
 class UBarrel; 
 class UTurret;
+class AProjectile;
 
 UCLASS(meta = (BlueprintSpawnableComponent))
 class BATTLETANKS_API UAimingComponent : public UActorComponent
@@ -27,7 +28,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
-	void Aim(FVector HitLocation, float LaunchSpeed);
+	void Aim(FVector HitLocation);
+
+	void Fire();
 
 	UFUNCTION(BlueprintCallable, Category = "SetUp")
 	void Initialise(UBarrel* Barrel, UTurret* Turret);
@@ -50,7 +53,18 @@ private:
 
 private:
 
+	UPROPERTY(EditAnywhere, Category = "Firing")
+	float LaunchSpeed = 4000.f;
+
+	UPROPERTY(EditAnywhere, Category = "Firing")
+	float FireRateSeconds = 2.f;
+
+	UPROPERTY(EditAnywhere, Category = "SetUp")
+	TSubclassOf<AProjectile> Projectile;
+
 	UBarrel* Barrel = nullptr;
 	UTurret* Turret = nullptr;
+
+	double m_dLastFireTimeSeconds = 0;
 	
 };

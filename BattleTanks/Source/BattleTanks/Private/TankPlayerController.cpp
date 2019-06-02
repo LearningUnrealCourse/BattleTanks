@@ -8,6 +8,7 @@
 #include "Engine/EngineTypes.h"
 #include "DrawDebugHelpers.h"
 #include "Tank.h"
+#include "AimingComponent.h"
 
 
 void ATankPlayerController::BeginPlay()
@@ -17,6 +18,12 @@ void ATankPlayerController::BeginPlay()
 	//Getting Pixel Coords at start since the value is not going to change 
 	//*Have in mind if the screen is scalated this is not going to work
 	CrosshHairScreenLocationPixelCoords = GetCrossHairScreenLocationInPixelCoordinates();
+
+	auto aimingComponent = Cast<UAimingComponent>(GetControlledTank()->GetComponentByClass(UAimingComponent::StaticClass()));
+	if (aimingComponent != nullptr)
+	{
+		AimingComponentFound(aimingComponent);
+	}
 }
 
 
@@ -56,7 +63,7 @@ void ATankPlayerController::AimAtCrosshair()
 	FVector HitLocation;
 	if (GetSightRayHitLocation(HitLocation))
 	{
-		GetControlledTank()->AimAt(HitLocation);
+		Tank->AimAt(HitLocation);
 	}
 }
 

@@ -29,8 +29,9 @@ void ATankAIController::Tick(float DeltaTime)
 		EPathFollowingRequestResult::Type result = MoveToActor(playerTank, AcceptanceRadius);
 		if (result == EPathFollowingRequestResult::Type::AlreadyAtGoal)
 		{
-			GetControlledTank()->AimAt(playerTank->GetActorLocation());
-			GetControlledTank()->Fire();
+			ATank* controlledTank = GetControlledTank();
+			controlledTank->AimAt(playerTank->GetActorLocation());
+			controlledTank->Fire();
 		}
 	}
 }

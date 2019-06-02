@@ -8,6 +8,8 @@
 #include "TankPlayerController.generated.h"
 
 class ATank;
+class UAimingComponent;
+
 /**
  * 
  */
@@ -24,6 +26,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	ATank* GetControlledTank() const;
+
+protected:
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AimingComponentFound(UAimingComponent* AimingComponentRef);
 
 private:
 
