@@ -5,8 +5,6 @@
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-	if (Throw != 0.f) UE_LOG(LogTemp, Warning, TEXT("Throw: %f"), Throw)
-
 	SetTrackThrottle(m_pRightTrack, Throw);
 	SetTrackThrottle(m_pLeftTrack, Throw);
 }

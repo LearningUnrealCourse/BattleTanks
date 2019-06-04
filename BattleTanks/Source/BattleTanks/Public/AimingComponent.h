@@ -40,12 +40,14 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "State")
-	EAimingState m_eCurrentState;
+	EAimingState m_eCurrentState = EAimingState::Reloading;
 
 private:
 
 	// Sets default values for this component's properties
 	UAimingComponent();
+
+	bool IsBarrelMoving();
 
 	FRotator GetDeltaRotator(FRotator Rotator, FVector Direction);
 	void MoveBarrelTowards(FVector direction);
@@ -65,6 +67,8 @@ private:
 	UBarrel* Barrel = nullptr;
 	UTurret* Turret = nullptr;
 
-	double m_dLastFireTimeSeconds = 0;
+	float m_fLastFireTimeSeconds = 0;
+
+	FVector m_vAimDirection;
 	
 };

@@ -14,7 +14,7 @@ UAimingComponent::UAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
 }
@@ -41,7 +41,28 @@ void UAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (m_fLastFireTimeSeconds < FireRateSeconds)
+	{
+		m_fLastFireTimeSeconds += DeltaTime;
+		m_eCurrentState = EAimingState::Reloading;
+	}
+	else if (IsBarrelMoving())
+	{
+		m_eCurrentState = EAimingState::Aiming;
+	}
+	else
+	{
+		m_eCurrentState = EAimingState::Locked;
+	}
+}
+
+bool UAimingComponent::IsBarrelMoving()
+{
+	if (!ensure(Barrel))
+	{
+		return false;
+	}
+	return !Barrel->GetForwardVector().Equals(m_vAimDirection, 0.05);
 }
 
 void UAimingComponent::Aim(FVector HitLocation)
@@ -68,11 +89,11 @@ void UAimingComponent::Aim(FVector HitLocation)
 
 	if (solution)
 	{
-		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		m_vAimDirection = OutLaunchVelocity.GetSafeNormal();
 		if (Barrel != nullptr && Turret != nullptr)
 		{
-			MoveBarrelTowards(AimDirection);
-			MoveTurretTowards(AimDirection);
+			MoveBarrelTowards(m_vAimDirection);
+			MoveTurretTowards(m_vAimDirection);
 		}
 	}
 }
@@ -99,16 +120,18 @@ void UAimingComponent::MoveTurretTowards(FVector Direction)
 void UAimingComponent::Fire()
 {
 	double currentTimeInSeconds = FPlatformTime::Seconds();
-	if (Barrel != nullptr && ((currentTimeInSeconds - m_dLastFireTimeSeconds) > FireRateSeconds))
+	if (Barrel != nullptr && m_eCurrentState == EAimingState::Locked)
 	{
 		FVector socketLocation = Barrel->GetSocketLocation(FName("Projectile"));
 		FRotator socketRotation = Barrel->GetSocketRotation(FName("Projectile"));
+
 		AProjectile* spawnedProjectile = GetWorld()->SpawnActor<AProjectile>(
 			Projectile,
 			socketLocation,
 			socketRotation
 			);
 		spawnedProjectile->Launch(LaunchSpeed);
-		m_dLastFireTimeSeconds = FPlatformTime::Seconds();
+
+		m_fLastFireTimeSeconds = 0.f;
 	}
 }
